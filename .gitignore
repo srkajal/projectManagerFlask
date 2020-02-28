@@ -1,0 +1,6 @@
+.vscode/settings.json
+venv/*
+migrations/*
+__pycache__/*
+resources/__pycache__/*
+app.db
