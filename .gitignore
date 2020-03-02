@@ -1,5 +1,5 @@
 .vscode/settings.json
-venv/*
+env/*
 migrations/*
 __pycache__/*
 resources/__pycache__/*
