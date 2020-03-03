@@ -3,6 +3,7 @@ from flask import request, jsonify
 from Model import db, Task, TaskSchema, User, Project, ParentTask
 from datetime import datetime
 from HelperUtil import HelperUtil
+import constant
 
 tasks_schema = TaskSchema(many=True)
 task_schema = TaskSchema()
@@ -38,7 +39,7 @@ class TaskResource(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        if not json_data or not 'task_name' in json_data or not 'start_date' in json_data or not 'end_date' in json_data or not 'priority' in json_data or not 'status' in json_data or not 'user_id' in json_data or not 'project_id' in json_data or not 'parent_id' in json_data:
+        if not json_data or not 'task_name' in json_data or not 'start_date' in json_data or not 'end_date' in json_data or not 'priority' in json_data or not 'user_id' in json_data or not 'project_id' in json_data or not 'parent_id' in json_data:
             return {"error" : "Input data missing"}, 400
         
         task = Task.query.filter_by(task_name=json_data['task_name']).first()
@@ -66,7 +67,7 @@ class TaskResource(Resource):
             start_date = HelperUtil.stringToDate(self, json_data['start_date']),
             end_date = HelperUtil.stringToDate(self, json_data['end_date']),
             priority = json_data['priority'],
-            status = json_data['status'],
+            status = constant.ACTIVE,
             user_id = json_data['user_id'],
             parent_id = json_data['parent_id'],
             project_id = json_data['project_id']
@@ -101,6 +102,8 @@ class TaskResource(Resource):
             task.priority = json_data['priority']
 
         if 'status' in json_data:
+            if not json_data['status'] in [constant.OPEN, constant.CLOSED]:
+                return {'message': 'Invalid status'}, 400
             task.status = json_data['status']
         
         db.session.commit()

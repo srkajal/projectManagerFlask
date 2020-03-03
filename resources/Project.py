@@ -3,6 +3,7 @@ from flask import request, jsonify
 from Model import db, Project, ProjectSchema, User
 from datetime import datetime
 from HelperUtil import HelperUtil
+import constant
 
 projects_schema = ProjectSchema(many=True)
 project_schema = ProjectSchema()
@@ -34,7 +35,7 @@ class ProjectResource(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        if not json_data or not 'project_name' in json_data or not 'start_date' in json_data or not 'end_date' in json_data or not 'priority' in json_data or not 'status' in json_data or not 'user_id' in json_data:
+        if not json_data or not 'project_name' in json_data or not 'start_date' in json_data or not 'end_date' in json_data or not 'priority' in json_data or not 'user_id' in json_data:
             return {"error" : "Input data missing"}, 400
         
         project = Project.query.filter_by(project_name=json_data['project_name']).first()
@@ -52,7 +53,7 @@ class ProjectResource(Resource):
             start_date = HelperUtil.stringToDate(self, json_data['start_date']),
             end_date = HelperUtil.stringToDate(self, json_data['end_date']),
             priority = json_data['priority'],
-            status = json_data['status'],
+            status = constant.OPEN,
             user_id = json_data['user_id']
         )
 
@@ -84,6 +85,8 @@ class ProjectResource(Resource):
             project.priority = json_data['priority']
 
         if 'status' in json_data:
+            if not json_data['status'] in [constant.ACTIVE, constant.SUSPENDED]:
+                return {'message': 'Invalid status'}, 400
             project.status = json_data['status']
         
         db.session.commit()
