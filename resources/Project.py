@@ -53,7 +53,7 @@ class ProjectResource(Resource):
             start_date = HelperUtil.stringToDate(self, json_data['start_date']),
             end_date = HelperUtil.stringToDate(self, json_data['end_date']),
             priority = json_data['priority'],
-            status = constant.OPEN,
+            status = constant.ACTIVE,
             user_id = json_data['user_id']
         )
 

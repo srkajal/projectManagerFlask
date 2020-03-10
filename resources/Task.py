@@ -67,7 +67,7 @@ class TaskResource(Resource):
             start_date = HelperUtil.stringToDate(self, json_data['start_date']),
             end_date = HelperUtil.stringToDate(self, json_data['end_date']),
             priority = json_data['priority'],
-            status = constant.ACTIVE,
+            status = constant.OPEN,
             user_id = json_data['user_id'],
             parent_id = json_data['parent_id'],
             project_id = json_data['project_id']
